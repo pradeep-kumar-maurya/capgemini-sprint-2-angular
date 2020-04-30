@@ -1,0 +1,146 @@
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+        .color{
+            color: blue;
+        }
+        .booking{
+            color:red;
+        }
+    </style>
+</head>
+
+<div class="container">
+<div class="col-lg-8 m-auto d-block">
+<div *ngIf="checkAuthentication0">
+    <h1>Please login here</h1><br>
+    <label><b>Username :</b></label>
+    <input type="text" name="uname" [(ngModel)]="username" placeholder="enter username" required class="form-control" autocomplete="off"><br><br>
+    <label><b>Password :</b></label> 
+    <input type="password" name="pass" [(ngModel)]="password" placeholder="enter password" class="form-control" required><br><br>
+    <input type="button" value="Log In" class="btn btn-primary" (click)="validate()">
+</div>
+
+<div *ngIf="check0" align="center">
+    <h1 class="booking">** Book you tickets now **</h1><br>
+    <div *ngIf="checkAuthentication1">
+        <h2>Please select a city:</h2>
+        <select (change)="selectCity($event.target.value)" class="form-control custom-select form-control browser-default">
+            <option *ngFor="let city of cities" value={{city.citynames}}>
+                {{city.citynames}}
+            </option>
+        </select>
+    </div>
+    <br>
+
+    <div *ngIf="checkTheatre">
+        <h2>Please select a theatre :</h2>
+        <select (change)="selectTheatre($event.target.value)" class="form-control custom-select form-control browser-default">
+        <option *ngFor="let theatre of theatres" value={{theatre.theatre_name}}>
+            <span><span class='name'>{{theatre.theatre_name}}</span></span>
+        </option>
+        </select>
+    </div>
+    <br>
+
+    <div *ngIf="checkMovies">
+        <h2>Please select a Movie :</h2>
+        <select (change)="selectMovie($event.target.value)" class="form-control custom-select form-control browser-default">
+        <option *ngFor="let movie of movie_details" value="{{movie.movies}}">
+           {{movie.movies}}
+        </option>
+        </select>
+    </div>
+    <br>
+
+    <div *ngIf="checkShows">
+        <h2>Please select a show :</h2>
+        <select (change)="selectShow($event.target.value,$event.target.value)" class="form-control custom-select form-control browser-default">
+        <option *ngFor="let shows of show_details">
+            {{shows.show}}&nbsp;&nbsp;({{shows.timings}})
+        </option>
+        </select>
+    </div>
+    <br>
+
+    <div *ngIf="checkLanguage">
+        <h2>Please select a language :</h2>
+    <select (change)="selectLanguage($event.target.value, $event.target.value)" class="form-control custom-select form-control browser-default">
+        <option *ngFor="let languages of language_details">
+            {{languages.language}}&nbsp;&nbsp;({{languages.screen}})
+        </option>
+    </select>
+    </div>
+    <br>
+
+    <div *ngIf="checkSeats" class="table">
+        <h2>Please select the seat type :</h2>
+        <tr class="w3-light-grey w3-hover-red">
+            <th>Seat Type</th>
+            <th>Available Seats</th>
+            <th>Price</th>
+        </tr>
+        <tr *ngFor="let seat of seats" class="w3-hover-black">
+            <td><input type="submit" value={{seat.seat_type}} (click)="chosenSeat(seat)" class="btn btn-success"></td>
+            <td>{{seat.available_seats}}</td>
+            <td>{{seat.price}}</td>
+        </tr>
+    </div>
+    <br>
+
+    <div *ngIf="check">
+        <h2>** you selected : <span class="color">{{dummySeats.seat_type}}</span> **</h2><br>
+        <h2>Please enter the no. of seats to be booked :</h2>
+        <br>
+        <input type="text" name="seatsBooked" placeholder="enter no. of seats" [(ngModel)]="no_of_seats" required class="form-control"><br>
+        <input type="submit" value="submit" (click)="no_of_seats_selected()" class="btn btn-primary">
+    </div>
+    <br>
+
+    <div *ngIf="check1">
+        <h2>Your total amount is : <span class="color">Rs. {{total_amount}}.00</span></h2>
+        <br>
+        <h2>Please enter your account no. :</h2><br> 
+        <input type="text" name="account" [(ngModel)]="accountNo" required class="form-control" placeholder="enter account no."><br>
+        <input type="submit" value="submit" (click)="entered_accountNo()" class="btn btn-primary">
+    </div>
+
+    <div *ngIf="check5">
+        <h2>please enter a valid amount of seats to be booked!!</h2>
+    </div>
+    <br>
+
+    <div *ngIf="check2">
+        <h2>sorry, you won't have sufficient account balance</h2>
+    </div>
+    <br>
+
+    <div *ngIf="check3" class="table card-body">
+        <h2 class="booking">Hurray! your tickets are booked...</h2>
+        <h2 class="booking"><u>Your booking slip is shown below :</u></h2>
+        <br>
+        <h3>City : <span class="color">{{booking_slip.city}}</span></h3>
+        <h3>Theatre : <span class="color">{{booking_slip.theatre}}</span></h3>
+        <h3>Movie : <span class="color">{{booking_slip.movie}}</span></h3>
+        <h3>Show : <span class="color">{{booking_slip.show}}</span></h3>
+        <h3>Language : <span class="color">{{booking_slip.language}}</span></h3>
+        <h3>Seat type : <span class="color">{{booking_slip.seat_type}}</span></h3>
+        <h3>Seats booked : <span class="color">{{booking_slip.seats_booked}}</span></h3>
+        <h3>Total amount : <span class="color">{{booking_slip.amount}}</span></h3>
+        <h3 class="booking">{{payment_message}}</h3>
+    </div>
+    <br>
+
+    <div *ngIf="check4">
+        <h2>sorry, entered account number is not correct or does not exist!!</h2>
+    </div>
+
+</div>
+</div>
+</div>
+<br>
+
+<div *ngIf="checkAuthentication2" align="center" class="container">
+    <h2>Not a registered user !!</h2>
+</div>
